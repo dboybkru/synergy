@@ -6,20 +6,19 @@ def create(id):
     a3 = input('Имя владельца:  ')
     pets2 = {'Вид питомца:':a,'Возраст питомца: ':a2, 'Имя владельца:':a3}
     pets3[a1] = pets2
-    tmp = pets3
     print(pets2)
     print(pets3)
-    print(tmp)
-    pets[id] = tmp[id]
+    pets[id] = pets3.copy()
     return
 
 def read(id):
-    #pets2=pets.keys(id)
     print(pets[id])
     return
 def update(id):
+    create(id)
     return
 def delete(id):
+    pets.pop(id)
     return
 def get_suffix(a2):
     y = ''
@@ -50,21 +49,17 @@ while (True):
     elif ffunc == 'create':
         id = 0
         id = int(len(pets)+1)
-        print(id)
-        print (pets)
         idtest = id in pets
         if idtest == False:
-            create(id)            
-            #print(pets3)
-            #pets[id] = pets3
+            create(id)
             print (pets)
             pets2.clear()
-            #pets3.clear()
+            pets3.clear()
         else:
             print(f'Животное с таким ID уже существует')
             continue
+        
     elif ffunc == 'read':
-        id = 0
         id = int(input('Введите id питомца: '))
         idtest = id in pets
         if idtest == True:
@@ -73,17 +68,24 @@ while (True):
             print(f'Животное с таким ID не существует')
             continue
        
-    # elif ffunc == 'update':
-    #     id = input('Введите id питомца: ')
-    #     create(id)
-    #     print (pets)
-    #     pets2.clear()
-    #     pets3.clear()
-    # elif ffunc == 'delete':
-    #     id = int(input('Введите id питомца: '))
-    #     create(id)
-    #     print (pets)
-    #     pets2.clear()
-    #     pets3.clear()
-    # else:
-    #     print('Неверная команда')
+    elif ffunc == 'update':
+        id = int(input('Введите id питомца: '))
+        idtest = id in pets
+        if idtest == True:
+            update(id)
+            print (pets)
+        else:
+            print(f'Животное с таким ID не существует')
+            continue
+        
+    elif ffunc == 'delete':
+        id = int(input('Введите id питомца: '))
+        idtest = id in pets
+        if idtest == True:
+            delete(id)
+            print (pets)
+        else:
+            print(f'Животное с таким ID не существует')
+            continue
+    else:
+        print('Неверная команда')
