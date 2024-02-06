@@ -10,11 +10,12 @@
 from utils import randbool
 from utils import randcell
 from utils import randcell2
+import os
 
 CELL_TYPES = '🟩🌲🌊🏥🏦🔥'
 TREE_BONUS = 100
 UP_COST = 500
-L_COST = 10000
+L_COST = 1000
 
 class Map:
         
@@ -111,8 +112,9 @@ class Map:
                 self.cells[cx][cy] = 3
                 break
      
-    def pr_helico(self, helico):
+    def pr_helico(self, helico, clouds):
         c = self.cells[helico.x][helico.y]
+        d = clouds.cells[helico.x][helico.y]
         if (c == 2):
             helico.tank = helico.mxtank
         if (c == 5 and helico.tank > 0):
@@ -123,16 +125,17 @@ class Map:
             helico.mxtank += 1
             helico.score -= UP_COST
         if (c == 3 and helico.score >= L_COST):
-            helico.lives += 1
+            helico.lives += 10
             helico.score -= L_COST
-        
+        if (d == 2):
+            helico.lives -= 1
+            if helico.lives <= 1:
+                os.system('cls')
+                print(f'Игра окончена, Вы програли и зарабоали: {helico.score}, очков')
+                exit(0)
     
-        
-        
-        
-# tmp = Map(20, 25)
-# tmp.generate_forest(7, 10)
-# tmp.generate_river(60)
-# tmp.generate_river(60)
-# tmp.generate_river(60)
-# tmp.print_map()
+    def export_data(self):
+        return {'cells': self.cells}
+    
+    def import_data(self, data):
+        self.cells = data['cells'] or [[0 for i in range(self.w)] for j in range(self.h)]

@@ -1,59 +1,57 @@
 # 🔥 🌲 ☁️ ⚡ 🌊 🚁 💛 🟩 🏥 🏦 🧯 🏆 ☁ ❄
 
+from pynput import keyboard
+from clouds import Clouds
 from map import Map
 import time
 import os
+import json
 from helicopter import Helicopter as Helico
-from clouds import Clouds
-from pynput import keyboard
 
-TICK_SLEEP = 0.1
+
+
+TICK_SLEEP = 0.05
 TREE_UP = 50
-FIRE_UP = 100
-CLOUDS_UP = 30
+FIRE_UP = 75
+CLOUDS_UP = 100
 MAP_W, MAP_H = 20, 10
 
 field = Map(MAP_W, MAP_H)
-# field.generate_forest(6, 10)
-# field.generate_river(1500)
-# field.generate_river(1500)
-field.add_fire()
-# field.generate_ups()
-
 clouds = Clouds(MAP_W, MAP_H)
 helico = Helico(MAP_W, MAP_H)
+tick = 1
 
 MOVES = {'w': (-1, 0), 'd': (0, 1), 's': (1, 0), 'a': (0, -1),}
-
-
+# f - сохранеие, g - восстановление
 def pr_key(key):
-    global helico
+    global helico, tick, clouds, field
     c = key.char.lower()
     if c in MOVES.keys():
         dx, dy = MOVES[c][0], MOVES[c][1]
         helico.move(dx, dy)
-        
-    
-    print('{0} released'.format(key))
-    if key == keyboard.Key.esc:
-        # Stop listener
-        return False
-
+    elif c == 'f':
+        data = {'helicopter': helico.export_data(), 
+                    'clouds': clouds.export_data(), 
+                    'field': field.export_data(),
+                    'tick': tick}
+        with open('level.json', 'w') as lvl:
+            json.dump(data, lvl)
+    elif c == 'g':
+        with open('level.json', 'r') as lvl:
+            data = json.load(lvl)
+            tick = data['tick'] or 1
+            helico.import_data(data['helicopter'])
+            field.import_data(data['field'])
+            clouds.import_data(data['clouds'])
 
 listener = keyboard.Listener(
     on_press=None,
-    on_release=pr_key)
+    on_release=pr_key,)
 listener.start()
-
-tick = 1
-
-
-
-
 
 while True:
     os.system('cls')
-    field.pr_helico(helico)
+    field.pr_helico(helico, clouds)
     helico.print_stats()
     field.print_map(helico, clouds)    
     print('Tick', tick)
