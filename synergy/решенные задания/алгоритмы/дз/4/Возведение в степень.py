@@ -7,4 +7,4 @@ def degree(x, y):
         return (x + degree(x, y-1))
     else:
         return 0
-print(degree(1500000000, 250000))
+print(degree(15, 250))
