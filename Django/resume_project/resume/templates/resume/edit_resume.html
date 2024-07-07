@@ -1,17 +1,18 @@
+<!-- resume/templates/resume/edit_resume.html -->
 {% load bootstrap4 %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Resume</title>
+    <title>Редактировать резюме</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
-    <h1>Edit Resume</h1>
+    <h1>Редактировать резюме</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 </div>
 </body>

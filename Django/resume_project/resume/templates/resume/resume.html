@@ -1,34 +1,35 @@
+<!-- resume/templates/resume/resume.html -->
 {% load bootstrap4 %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Resume</title>
+    <title>Резюме</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
-    <h1>Resume</h1>
+    <h1>Резюме</h1>
     {% if resume %}
-        <img src="{{ resume.photo.url }}" class="img-fluid" alt="Photo">
-        <h2>About Me</h2>
+        <img src="{{ resume.photo.url }}" class="img-fluid" alt="Фото">
+        <h2>О себе</h2>
         <p>{{ resume.about_me }}</p>
-        <h2>Education</h2>
+        <h2>Образование</h2>
         <p>{{ resume.education }}</p>
         {% if resume.education_files %}
-            <a href="{{ resume.education_files.url }}" download>Download Certificate</a>
+            <a href="{{ resume.education_files.url }}" download>Скачать аттестат</a>
         {% endif %}
-        <h2>Work Experience</h2>
+        <h2>Опыт работы</h2>
         <p>{{ resume.work_experience }}</p>
-        <h2>Desired Position</h2>
+        <h2>Желаемая должность</h2>
         <p>{{ resume.desired_position }}</p>
-        <h2>Additional Information</h2>
+        <h2>Дополнительная информация</h2>
         <p>{{ resume.additional_info }}</p>
-        <h2>Contacts</h2>
+        <h2>Контакты</h2>
         <p>{{ resume.contacts }}</p>
     {% else %}
-        <p>No resume available.</p>
+        <p>Резюме отсутствует.</p>
     {% endif %}
-    <a href="{% url 'edit_resume' %}" class="btn btn-primary">Edit Resume</a>
+    <a href="{% url 'edit_resume' %}" class="btn btn-primary">Редактировать резюме</a>
 </div>
 </body>
 </html>
