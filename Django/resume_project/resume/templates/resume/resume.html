@@ -30,32 +30,32 @@
             <div class="col-md-8">
                 <div class="resume-section">
                     <h2>Дополнительная информация</h2>
-                    <p>{{ resume.additional_info|linebreaksbr }}</p>
+                    <p>{{ resume.additional_info|linebreaksbr|urlize }}</p>
                 </div>
             </div>
         </div>
         <div class="resume-section">
             <h2>Желаемая должность</h2>
-            <p>{{ resume.desired_position|linebreaksbr }}</p>
+            <p>{{ resume.desired_position|linebreaksbr|urlize }}</p>
         </div>
         <div class="resume-section">
             <h2>Образование</h2>
-            <p>{{ resume.education|linebreaksbr }}</p>
+            <p>{{ resume.education|linebreaksbr|urlize }}</p>
             {% if resume.education_files %}
                 <a href="{{ resume.education_files.url }}" download>Скачать аттестат</a>
             {% endif %}
         </div>
         <div class="resume-section">
             <h2>Опыт работы</h2>
-            <p>{{ resume.work_experience|linebreaksbr }}</p>
+            <p>{{ resume.work_experience|linebreaksbr|urlize }}</p>
         </div>
         <div class="resume-section">
             <h2>О себе</h2>
-            <p>{{ resume.about_me|linebreaksbr }}</p>
+            <p>{{ resume.about_me|linebreaksbr|urlize }}</p>
         </div>
         <div class="resume-section">
             <h2>Контакты</h2>
-            <p>{{ resume.contacts|linebreaksbr }}</p>
+            <p>{{ resume.contacts|linebreaksbr|urlize }}</p>
         </div>
     {% else %}
         <p>Резюме отсутствует.</p>
@@ -77,7 +77,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>{{ resume.contacts|linebreaksbr }}</p>
+                <p>{{ resume.contacts|linebreaksbr|urlize }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
