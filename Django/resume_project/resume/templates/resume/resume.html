@@ -60,7 +60,34 @@
     {% else %}
         <p>Резюме отсутствует.</p>
     {% endif %}
-    <a href="{% url 'edit_resume' %}" class="btn btn-primary">Редактировать резюме</a>
+    <!-- Кнопка для вызова модального окна -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#contactModal">
+        Связаться со мной
+    </button>
 </div>
+
+<!-- Модальное окно -->
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Контакты</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{{ resume.contacts|linebreaksbr }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
