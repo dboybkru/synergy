@@ -1,0 +1,34 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Resume</h1>
+    {% if resume %}
+        <img src="{{ resume.photo.url }}" class="img-fluid" alt="Photo">
+        <h2>About Me</h2>
+        <p>{{ resume.about_me }}</p>
+        <h2>Education</h2>
+        <p>{{ resume.education }}</p>
+        {% if resume.education_files %}
+            <a href="{{ resume.education_files.url }}" download>Download Certificate</a>
+        {% endif %}
+        <h2>Work Experience</h2>
+        <p>{{ resume.work_experience }}</p>
+        <h2>Desired Position</h2>
+        <p>{{ resume.desired_position }}</p>
+        <h2>Additional Information</h2>
+        <p>{{ resume.additional_info }}</p>
+        <h2>Contacts</h2>
+        <p>{{ resume.contacts }}</p>
+    {% else %}
+        <p>No resume available.</p>
+    {% endif %}
+    <a href="{% url 'edit_resume' %}" class="btn btn-primary">Edit Resume</a>
+</div>
+</body>
+</html>
