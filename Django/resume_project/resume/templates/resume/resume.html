@@ -5,27 +5,58 @@
 <head>
     <title>Резюме</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .resume-section {
+            margin-bottom: 20px;
+        }
+        .resume-section h2 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .resume-section p {
+            white-space: pre-line;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
     <h1>Резюме</h1>
     {% if resume %}
-        <img src="{{ resume.photo.url }}" class="img-fluid" alt="Фото">
-        <h2>О себе</h2>
-        <p>{{ resume.about_me }}</p>
-        <h2>Образование</h2>
-        <p>{{ resume.education }}</p>
-        {% if resume.education_files %}
-            <a href="{{ resume.education_files.url }}" download>Скачать аттестат</a>
-        {% endif %}
-        <h2>Опыт работы</h2>
-        <p>{{ resume.work_experience }}</p>
-        <h2>Желаемая должность</h2>
-        <p>{{ resume.desired_position }}</p>
-        <h2>Дополнительная информация</h2>
-        <p>{{ resume.additional_info }}</p>
-        <h2>Контакты</h2>
-        <p>{{ resume.contacts }}</p>
+        <div class="row">
+            <div class="col-md-4">
+                <img src="{{ resume.photo.url }}" class="img-fluid" alt="Фото" style="max-width: 100%;">
+            </div>
+            <div class="col-md-8">
+                <div class="resume-section">
+                    <h2>Дополнительная информация</h2>
+                    <p>{{ resume.additional_info|linebreaksbr }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="resume-section">
+            <h2>Желаемая должность</h2>
+            <p>{{ resume.desired_position|linebreaksbr }}</p>
+        </div>
+        <div class="resume-section">
+            <h2>Образование</h2>
+            <p>{{ resume.education|linebreaksbr }}</p>
+            {% if resume.education_files %}
+                <a href="{{ resume.education_files.url }}" download>Скачать аттестат</a>
+            {% endif %}
+        </div>
+        <div class="resume-section">
+            <h2>Опыт работы</h2>
+            <p>{{ resume.work_experience|linebreaksbr }}</p>
+        </div>
+        <div class="resume-section">
+            <h2>О себе</h2>
+            <p>{{ resume.about_me|linebreaksbr }}</p>
+        </div>
+        <div class="resume-section">
+            <h2>Контакты</h2>
+            <p>{{ resume.contacts|linebreaksbr }}</p>
+        </div>
     {% else %}
         <p>Резюме отсутствует.</p>
     {% endif %}
