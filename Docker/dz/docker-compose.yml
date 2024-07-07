@@ -1,0 +1,50 @@
+services:
+  web:
+    image: my_web_app:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    ports:
+      - "80:80"
+    networks:
+      - webnet
+
+  database:
+    image: my_db_image:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1G
+        reservations:
+          cpus: '0.50'
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - webnet
+
+networks:
+  webnet:
+
+volumes:
+  db_data:

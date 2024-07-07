@@ -1,0 +1,27 @@
+services:
+  caddy:
+    image: caddy
+    container_name: caddy
+    ports:
+      - 777:80
+    networks:
+      - webserver
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - 778:80
+    networks:
+      - webserver
+
+
+networks:
+  webserver:
+    driver: bridge
+    name: webserver
+
+volumes:
+  caddy-volume:
+    driver: local
+  nginx-volume:
+    external: true
