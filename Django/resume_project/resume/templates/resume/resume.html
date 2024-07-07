@@ -17,6 +17,9 @@
         .resume-section p {
             white-space: pre-line;
         }
+        .highlight-date {
+            color: red; /* Измените цвет на нужный вам */
+        }
     </style>
 </head>
 <body>
@@ -30,32 +33,37 @@
             <div class="col-md-8">
                 <div class="resume-section">
                     <h2>Дополнительная информация</h2>
-                    <p>{{ resume.additional_info|linebreaksbr|urlize }}</p>
+                    <p>{{ resume.additional_info|linebreaksbr|urlize|safe }}</p>
                 </div>
             </div>
         </div>
         <div class="resume-section">
             <h2>Желаемая должность</h2>
-            <p>{{ resume.desired_position|linebreaksbr|urlize }}</p>
+            <p>{{ resume.desired_position|linebreaksbr|urlize|safe }}</p>
         </div>
         <div class="resume-section">
             <h2>Образование</h2>
-            <p>{{ resume.education|linebreaksbr|urlize }}</p>
-            {% if resume.education_files %}
-                <a href="{{ resume.education_files.url }}" download>Скачать аттестат</a>
+            <p>{{ resume.education|linebreaksbr|urlize|safe }}</p>
+            {% if resume.education_files.all %}
+                <h3>Аттестаты:</h3>
+                <ul>
+                    {% for file in resume.education_files.all %}
+                        <li><a href="{{ file.file.url }}" download target="_blank">{{ file.file.name }}</a></li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         </div>
         <div class="resume-section">
             <h2>Опыт работы</h2>
-            <p>{{ resume.work_experience|linebreaksbr|urlize }}</p>
+            <p>{{ resume.work_experience|linebreaksbr|urlize|safe }}</p>
         </div>
         <div class="resume-section">
             <h2>О себе</h2>
-            <p>{{ resume.about_me|linebreaksbr|urlize }}</p>
+            <p>{{ resume.about_me|linebreaksbr|urlize|safe }}</p>
         </div>
         <div class="resume-section">
             <h2>Контакты</h2>
-            <p>{{ resume.contacts|linebreaksbr|urlize }}</p>
+            <p id="contact-info">{{ resume.contacts|linebreaksbr|urlize|safe }}</p>
         </div>
     {% else %}
         <p>Резюме отсутствует.</p>
@@ -77,7 +85,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>{{ resume.contacts|linebreaksbr|urlize }}</p>
+                <p id="modal-contact-info">{{ resume.contacts|linebreaksbr|urlize|safe }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -89,5 +97,38 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    // Функция для выделения дат и создания кликабельных ссылок для телефона и мессенджеров
+    document.addEventListener("DOMContentLoaded", function() {
+        const datePattern = /\b\d{1,2}\.\d{1,2}\.\d{2,4}\b/g;
+        const phonePattern = /Телефон:\s*(\+\d $$\d{3}$$ \d{7})/g;
+
+        document.querySelectorAll('.resume-section p').forEach(function(p) {
+            // Выделение дат
+            p.innerHTML = p.innerHTML.replace(datePattern, function(match) {
+                return '<span class="highlight-date">' + match + '</span>';
+            });
+
+            // Создание кликабельных ссылок для телефона и мессенджеров
+            p.innerHTML = p.innerHTML.replace(phonePattern, function(match, phone) {
+                const phoneDigits = phone.replace(/\D/g, ''); // Удалить все нецифровые символы
+                const contactInfo = `
+                    Телефон: <a href="tel:${phoneDigits}">${phone}</a><br>
+                    WhatsApp: <a href="https://wa.me/${phoneDigits}" target="_blank">WhatsApp</a><br>
+                    Telegram: <a href="https://t.me/${phoneDigits}" target="_blank">Telegram</a><br>
+                    Viber: <a href="viber://chat?number=%2B${phoneDigits}" target="_blank">Viber</a>
+                `;
+                document.getElementById('contact-info').innerHTML = contactInfo;
+                document.getElementById('modal-contact-info').innerHTML = contactInfo;
+                return `Телефон: <a href="tel:${phoneDigits}">${phone}</a>`;
+            });
+
+            // Сделать все ссылки открывающимися в новом окне
+            p.querySelectorAll('a').forEach(function(a) {
+                a.setAttribute('target', '_blank');
+            });
+        });
+    });
+</script>
 </body>
 </html>

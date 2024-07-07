@@ -1,6 +1,11 @@
 # resume/forms.py
 from django import forms
-from .models import Resume
+from .models import Resume, EducationFile
+
+class EducationFileForm(forms.ModelForm):
+    class Meta:
+        model = EducationFile
+        fields = ['file']
 
 class ResumeForm(forms.ModelForm):
     class Meta:
@@ -15,4 +20,7 @@ class ResumeForm(forms.ModelForm):
             'desired_position': 'Желаемая должность',
             'additional_info': 'Дополнительная информация',
             'contacts': 'Контакты',
+        }
+        widgets = {
+            'education_files': forms.CheckboxSelectMultiple,
         }
