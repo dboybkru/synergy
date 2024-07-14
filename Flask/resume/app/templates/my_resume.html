@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Мое резюме</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.photo.label }}<br>
+            {{ form.photo() }}
+            {% if resume and resume.photo %}
+                <img src="{{ url_for('static', filename='uploads/' + resume.photo) }}" alt="Фото" width="200" class="mt-2">
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.about.label }}<br>
+            {{ form.about(cols=50, rows=4, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.education.label }}<br>
+            {{ form.education(cols=50, rows=4, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.experience.label }}<br>
+            {{ form.experience(cols=50, rows=4, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.desired_position.label }}<br>
+            {{ form.desired_position(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.additional_info.label }}<br>
+            {{ form.additional_info(cols=50, rows=4, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.contacts.label }}<br>
+            {{ form.contacts(cols=50, rows=4, class="form-control") }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+
+    <h2 class="mt-4">Загрузить сертификат</h2>
+    <form action="{{ url_for('main.upload_certificate') }}" method="post" enctype="multipart/form-data">
+        {{ cert_form.hidden_tag() }}
+        <div class="form-group">
+            {{ cert_form.certificate.label }}<br>
+            {{ cert_form.certificate() }}
+        </div>
+        {{ cert_form.submit(class="btn btn-secondary") }}
+    </form>
+
+    {% if resume and resume.certificates %}
+        <h2 class="mt-4">Ваши сертификаты</h2>
+        <ul class="list-group">
+        {% for cert in resume.certificates %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{{ url_for('main.download_certificate', filename=cert.filename) }}">{{ cert.filename }}</a>
+                <a href="{{ url_for('main.delete_certificate', id=cert.id) }}" class="btn btn-danger btn-sm">Удалить</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

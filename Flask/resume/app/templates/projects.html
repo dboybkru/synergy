@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Проекты{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Мои проекты</h1>
+    
+    <div class="mb-4">
+        <h2>Фильтр по тегам:</h2>
+        <a href="{{ url_for('projects', sort=sort) }}" class="btn btn-outline-primary {% if not current_tag %}active{% endif %}">Все</a>
+        {% for tag in tags %}
+            <a href="{{ url_for('projects', tag=tag.name, sort=sort) }}" class="btn btn-outline-primary {% if current_tag == tag.name %}active{% endif %}">{{ tag.name }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="mb-4">
+        <h2>Сортировка:</h2>
+        <a href="{{ url_for('projects', tag=current_tag, sort='newest') }}" class="btn btn-outline-secondary {% if sort == 'newest' %}active{% endif %}">Сначала новые</a>
+        <a href="{{ url_for('projects', tag=current_tag, sort='oldest') }}" class="btn btn-outline-secondary {% if sort == 'oldest' %}active{% endif %}">Сначала старые</a>
+    </div>
+
+    <div class="row">
+    {% for project in projects %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if project.image %}
+                    <img src="{{ url_for('static', filename='uploads/' + project.image) }}" class="card-img-top" alt="{{ project.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <p class="card-text">{{ project.description }}</p>
+                    <a href="{{ project.link }}" class="btn btn-primary" target="_blank">Посмотреть проект</a>
+                </div>
+                <div class="card-footer">
+                    {% for tag in project.tags %}
+                        <span class="badge badge-secondary">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}

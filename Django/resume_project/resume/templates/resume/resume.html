@@ -44,7 +44,7 @@
         <div class="resume-section">
             <h2>Образование</h2>
             <p>{{ resume.education|linebreaksbr|urlize|safe }}</p>
-            {% if resume.education_files.all %}
+            {% if resume.education_files.exists %}
                 <h3>Аттестаты:</h3>
                 <ul>
                     {% for file in resume.education_files.all %}
@@ -98,35 +98,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script>
-    // Функция для выделения дат и создания кликабельных ссылок для телефона и мессенджеров
     document.addEventListener("DOMContentLoaded", function() {
-        const datePattern = /\b\d{1,2}\.\d{1,2}\.\d{2,4}\b/g;
-        const phonePattern = /Телефон:\s*(\+\d $$\d{3}$$ \d{7})/g;
+        const phoneNumber = "{{ resume.phone_number|default_if_none:'' }}".replace(/\D/g, ''); // Удалить все нецифровые символы
 
-        document.querySelectorAll('.resume-section p').forEach(function(p) {
-            // Выделение дат
-            p.innerHTML = p.innerHTML.replace(datePattern, function(match) {
-                return '<span class="highlight-date">' + match + '</span>';
-            });
+        if (phoneNumber) {
+            const contactInfo = `
+                Телефон: <a href="tel:${phoneNumber}">+7 (962) 2650690</a><br>
+                WhatsApp: <a href="https://wa.me/${phoneNumber}" target="_blank">WhatsApp</a><br>
+                Telegram: <a href="https://t.me/${phoneNumber}" target="_blank">Telegram</a><br>
+                Viber: <a href="viber://chat?number=%2B${phoneNumber}" target="_blank">Viber</a>
+            `;
+            document.getElementById('contact-info').innerHTML += contactInfo;
+            document.getElementById('modal-contact-info').innerHTML += contactInfo;
+        }
 
-            // Создание кликабельных ссылок для телефона и мессенджеров
-            p.innerHTML = p.innerHTML.replace(phonePattern, function(match, phone) {
-                const phoneDigits = phone.replace(/\D/g, ''); // Удалить все нецифровые символы
-                const contactInfo = `
-                    Телефон: <a href="tel:${phoneDigits}">${phone}</a><br>
-                    WhatsApp: <a href="https://wa.me/${phoneDigits}" target="_blank">WhatsApp</a><br>
-                    Telegram: <a href="https://t.me/${phoneDigits}" target="_blank">Telegram</a><br>
-                    Viber: <a href="viber://chat?number=%2B${phoneDigits}" target="_blank">Viber</a>
-                `;
-                document.getElementById('contact-info').innerHTML = contactInfo;
-                document.getElementById('modal-contact-info').innerHTML = contactInfo;
-                return `Телефон: <a href="tel:${phoneDigits}">${phone}</a>`;
-            });
-
-            // Сделать все ссылки открывающимися в новом окне
-            p.querySelectorAll('a').forEach(function(a) {
-                a.setAttribute('target', '_blank');
-            });
+        // Сделать все ссылки открывающимися в новом окне
+        document.querySelectorAll('.resume-section p a').forEach(function(a) {
+            a.setAttribute('target', '_blank');
         });
     });
 </script>

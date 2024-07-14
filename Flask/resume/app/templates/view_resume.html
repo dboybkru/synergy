@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Резюме {{ user.username }}</h1>
+    
+    {% if resume.photo %}
+        <img src="{{ url_for('static', filename='uploads/' + resume.photo) }}" alt="Фото" width="200" class="mb-3">
+    {% endif %}
+    
+    <h2>- О себе</h2>
+    <p>{{ resume.about | nl2br }}</p>
+    
+    <h2>- Образование</h2>
+    <p>{{ resume.education | nl2br }}</p>
+    
+    <h2>- Опыт работы</h2>
+    <p>{{ resume.experience | nl2br }}</p>
+    
+    <h2>- Желаемая должность</h2>
+    <p>{{ resume.desired_position }}</p>
+    
+    <h2>- Дополнительная информация</h2>
+    <p>{{ resume.additional_info | nl2br }}</p>
+    
+    <h2>- Контакты</h2>
+    <p>{{ resume.contacts | nl2br }}</p>
+    
+    {% if resume.certificates %}
+        <h2>- Сертификаты</h2>
+        <ul>
+        {% for cert in resume.certificates %}
+            <li>
+                <a href="{{ url_for('main.download_certificate', filename=cert.filename) }}">{{ cert.filename }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

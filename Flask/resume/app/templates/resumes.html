@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Мои резюме{% endblock %}
+
+{% block content %}
+    <h1>Мои резюме</h1>
+    <a href="{{ url_for('create_resume') }}" class="btn btn-primary mb-3">Создать новое резюме</a>
+    <div class="row">
+        {% for resume in resumes %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ resume.title }}</h5>
+                        <p class="card-text">Создано: {{ resume.created_at.strftime('%d.%m.%Y') }}</p>
+                        <a href="{{ url_for('edit_resume', resume_id=resume.id) }}" class="btn btn-primary">Редактировать</a>
+                        <a href="{{ url_for('view_resume', resume_id=resume.id) }}" class="btn btn-secondary">Просмотр</a>
+                        <form action="{{ url_for('delete_resume', resume_id=resume.id) }}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены, что хотите удалить это резюме?');">Удалить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

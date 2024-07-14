@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать резюме{% endblock %}
+
+{% block content %}
+    <h1>Редактировать резюме</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.title.label }}
+            {{ form.title(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.photo.label }}
+            {{ form.photo(class="form-control-file") }}
+        </div>
+        <div class="form-group">
+            {{ form.about.label }}
+            {{ form.about(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.education.label }}
+            {{ form.education(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.experience.label }}
+            {{ form.experience(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.desired_position.label }}
+            {{ form.desired_position(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.additional_info.label }}
+            {{ form.additional_info(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.contacts.label }}
+            {{ form.contacts(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.block_order.label }}
+            {{ form.block_order(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.color_scheme.label }}
+            {{ form.color_scheme(class="form-control") }}
+        </div>
+        <div class="form-check">
+            {{ form.is_public(class="form-check-input") }}
+            {{ form.is_public.label(class="form-check-label") }}
+        </div>
+        {{ form.submit(class="btn btn-primary mt-3") }}
+    </form>
+
+    <h2 class="mt-4">Навыки</h2>
+    <ul class="list-group mb-3">
+        {% for skill in resume.skills %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ skill.name }} - {{ skill.level }}%
+                <a href="{{ url_for('delete_skill', resume_id=resume.id, skill_id=skill.id) }}" class="btn btn-danger btn-sm">Удалить</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('add_skill', resume_id=resume.id) }}" method="POST">
+        {{ skill_form.hidden_tag() }}
+        <div class="form-group">
+            {{ skill_form.name.label }}
+            {{ skill_form.name(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ skill_form.level.label }}
+            {{ skill_form.level(class="form-control") }}
+        </div>
+        {{ skill_form.submit(class="btn btn-secondary") }}
+    </form>
+
+    <h2 class="mt-4">Проекты</h2>
+    <div class="row">
+        {% for project in resume.projects %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    {% if project.image %}
+                        <img src="{{ url_for('static', filename='uploads/' + project.image) }}" class="card-img-top" alt="{{ project.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">{{ project.description }}</p>
+                        <a href="{{ project.link }}" class="btn btn-primary" target="_blank">Посмотреть проект</a>
+                        <a href="{{ url_for('delete_project', resume_id=resume.id, project_id=project.id) }}" class="btn btn-danger">Удалить</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <form action="{{ url_for('add_project', resume_id=resume.id) }}" method="POST" enctype="multipart/form-data">
+        {{ project_form.hidden_tag() }}
+        <div class="form-group">
+            {{ project_form.title.label }}
+            {{ project_form.title(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ project_form.description.label }}
+            {{ project_form.description(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ project_form.image.label }}
+            {{ project_form.image(class="form-control-file") }}
+        </div>
+        <div class="form-group">
+            {{ project_form.link.label }}
+            {{ project_form.link(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ project_form.tags.label }}
+            {{ project_form.tags(class="form-control") }}
+        </div>
+        {{ project_form.submit(class="btn btn-secondary") }}
+    </form>
+    
+    <h2 class="mt-4">Социальные сети</h2>
+    <ul class="list-group mb-3">
+        {% for link in resume.social_links %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ link.platform }}: <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
+                <a href="{{ url_for('delete_social_link', resume_id=resume.id, link_id=link.id) }}" class="btn btn-danger btn-sm">Удалить</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('add_social_link', resume_id=resume.id) }}" method="POST">
+        {{ social_link_form.hidden_tag() }}
+        <div class="form-group">
+            {{ social_link_form.platform.label }}
+            {{ social_link_form.platform(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ social_link_form.url.label }}
+            {{ social_link_form.url(class="form-control") }}
+        </div>
+        {{ social_link_form.submit(class="btn btn-secondary") }}
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var el = document.getElementById('block-order-list');
+            var sortable = Sortable.create(el, {
+                animation: 150,
+                onEnd: function () {
+                    var order = sortable.toArray();
+                    document.getElementById('block_order').value = order.join(',');
+                }
+            });
+
+            // Initialize block order
+            var initialOrder = document.getElementById('block_order').value.split(',');
+            initialOrder.forEach(function(id) {
+                var element = el.querySelector('[data-id="' + id + '"]');
+                if (element) {
+                    el.appendChild(element);
+                }
+            });
+        });
+    </script>
+{% endblock %}

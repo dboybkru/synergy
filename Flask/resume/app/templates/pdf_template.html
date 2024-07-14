@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Резюме</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1, h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Резюме</h1>
+    {% if resume.photo %}
+    <img src="{{ url_for('static', filename='uploads/' + resume.photo, _external=True) }}" alt="Фото профиля" style="max-width: 200px;">
+    {% endif %}
+    {% for block in resume.block_order.split(',') %}
+        {% if block == 'about' %}
+            <h2>О себе</h2>
+            {{ resume.about|safe }}
+        {% elif block == 'education' %}
+            <h2>Образование</h2>
+            {{ resume.education|safe }}
+        {% elif block == 'experience' %}
+            <h2>Опыт работы</h2>
+            {{ resume.experience|safe }}
+        {% elif block == 'desired_position' %}
+            <h2>Желаемая должность</h2>
+            <p>{{ resume.desired_position }}</p>
+        {% elif block == 'additional_info' %}
+            <h2>Дополнительная информация</h2>
+            {{ resume.additional_info|safe }}
+        {% elif block == 'contacts' %}
+            <h2>Контакты</h2>
+            {{ resume.contacts|safe }}
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
